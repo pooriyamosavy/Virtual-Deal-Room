@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserSession } from './user-session.entities';
+import { Deal } from './deal.entities';
 
 @Entity()
 export class User {
@@ -45,6 +46,10 @@ export class User {
   @Column({ enum: ['Buyer', 'Seller'] })
   @ApiProperty()
   role: 'Buyer' | 'Seller';
+
+  @OneToMany(() => Deal, (deal) => deal.creator)
+  @Exclude()
+  deals: Deal[];
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

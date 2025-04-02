@@ -60,26 +60,32 @@ export class UserCrudService {
   }
 
   async updateUser(user: User) {
-    await this.userRepo.update(user.id, user);
-    await this.redisService.flushPrefix('user');
-    await this.redisService.flushPrefix('users');
-    await this.redisService.set('user', { id: user.id }, user);
+    return this.redisService.updateCallback<User>(
+      'user',
+      { id: user.id },
+      async () => this.userRepo.update(user.id, user),
+      user,
+    );
   }
 
   async deleteUser(user: User) {
-    await this.userSessionRepo.delete({
-      user_id: user.id,
-    } as FindOptionsWhere<UserSession>);
-    await this.userRepo.remove(user);
-    await this.redisService.flushPrefix('user');
+    return this.redisService.deleteCallback<User>(
+      'user',
+      { id: user.id },
+      async () => {
+        await this.userSessionRepo.delete({
+          user_id: user.id,
+        } as FindOptionsWhere<UserSession>);
+        await this.userRepo.remove(user);
+      },
+    );
   }
 
   async createUser(user: User) {
-    const newUser = await this.userRepo.save(user);
-
-    await this.redisService.flushPrefix('users');
-    await this.redisService.set('user', { id: newUser.id }, newUser);
-
-    return newUser;
+    return this.redisService.createCallback<User>(
+      'user',
+      { id: user.id },
+      async () => this.userRepo.save(user),
+    );
   }
 }

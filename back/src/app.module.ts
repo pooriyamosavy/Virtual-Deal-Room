@@ -25,6 +25,8 @@ import Redis from 'ioredis';
 import { CoreModule } from './modules/core.module';
 import { ConfigCacheJwtModule } from './modules/config.module';
 import { DatabaseCacheModule } from './modules/database.module';
+import { DealModule } from './routes/deal/deal.module';
+import { DealCrudService } from './services/crud/deal-crud.service';
 
 export const redisClientFactory: FactoryProvider<Redis> = {
   provide: 'RedisClient',
@@ -51,14 +53,16 @@ export const redisClientFactory: FactoryProvider<Redis> = {
     CoreModule,
     UserModule,
     AuthModule,
+    DealModule,
   ],
   providers: [
     TokenService,
     UserSessionScheduler,
     RedisService,
     UserCrudService,
+    DealCrudService,
     redisClientFactory,
   ],
-  exports: [TokenService, RedisService, UserCrudService],
+  exports: [TokenService, RedisService, UserCrudService, DealCrudService],
 })
 export class AppModule {}

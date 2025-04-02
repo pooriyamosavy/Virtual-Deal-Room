@@ -4,6 +4,7 @@ import Redis from 'ioredis';
 import { User } from '../entities/user.entities';
 import { UserSession } from '../entities/user-session.entities';
 import { FactoryProvider } from '@nestjs/common';
+import { Deal } from 'src/entities/deal.entities';
 
 export const redisClientFactory: FactoryProvider<Redis> = {
   provide: 'RedisClient',
@@ -42,7 +43,7 @@ export const redisClientFactory: FactoryProvider<Redis> = {
       autoLoadEntities: true,
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, UserSession]),
+    TypeOrmModule.forFeature([User, UserSession, Deal]),
   ],
   providers: [redisClientFactory],
   exports: [TypeOrmModule, 'RedisClient'],

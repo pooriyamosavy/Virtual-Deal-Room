@@ -12,6 +12,7 @@ export class UpdateUserDTO
       | 'updated_at'
       | 'role'
       | 'email'
+      | 'deals'
     >
 {
   @IsString()

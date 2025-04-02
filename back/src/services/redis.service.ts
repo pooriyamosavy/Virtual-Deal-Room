@@ -67,6 +67,40 @@ export class RedisService {
     return fetchedValue;
   }
 
+  async createCallback<T>(
+    prefix: string,
+    key: RedisKey,
+    callback: () => Promise<T>,
+  ) {
+    const newValue = await callback();
+
+    await this.flushPrefix(prefix + 's');
+    await this.set(prefix, key, newValue);
+
+    return newValue;
+  }
+
+  async updateCallback<T>(
+    prefix: string,
+    key: RedisKey,
+    callback: () => Promise<any>,
+    newValue: T,
+  ) {
+    await callback();
+    await this.flushPrefix(prefix);
+    await this.flushPrefix(prefix + 's');
+    await this.set(prefix, key, newValue);
+  }
+
+  async deleteCallback<T>(
+    prefix: string,
+    key: RedisKey,
+    callback: () => Promise<any>,
+  ) {
+    await callback();
+    await this.flushPrefix(prefix);
+  }
+
   private getKey(prefix: string, key?: RedisKey): string {
     if (!key) return prefix;
 
