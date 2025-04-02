@@ -24,11 +24,7 @@ export class User {
     unique: true,
   })
   @ApiProperty()
-  phonenumber: string;
-
-  @Column()
-  @ApiProperty()
-  phonenumberVerified: boolean;
+  email: string;
 
   @Column()
   @Exclude()
@@ -46,11 +42,9 @@ export class User {
   @Exclude()
   updated_at: Date;
 
-  @Column({
-    default: false,
-  })
+  @Column({ enum: ['Buyer', 'Seller'] })
   @ApiProperty()
-  is_admin: boolean;
+  role: 'Buyer' | 'Seller';
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

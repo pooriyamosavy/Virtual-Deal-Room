@@ -1,10 +1,21 @@
-import { IsString, IsPhoneNumber, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsPhoneNumber,
+  MinLength,
+  IsEmail,
+  IsEnum,
+} from 'class-validator';
 
 export class SignupDto {
-  @IsPhoneNumber('IR', { message: 'Invalid phone number' })
-  phonenumber: string;
-
   @IsString()
-  @MinLength(6, { message: 'Password must be at least 6 characters long' })
+  @MinLength(6, { message: 'password must be at least 6 characters long' })
   password: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsEnum(['Buyer', 'Seller'], {
+    message: 'role must be either Buyer or Seller',
+  })
+  role: 'Buyer' | 'Seller';
 }

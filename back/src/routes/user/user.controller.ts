@@ -27,16 +27,16 @@ export class UserController {
   @Get('all')
   async getAllUsers(
     @Query('fullname') fullname?: string,
-    @Query('phonenumber') phonenumber?: string,
-    @Query('phonenumberVerified') phonenumberVerified?: boolean,
+    @Query('email') email?: string,
+    @Query('role') role?: 'Buyer' | 'Seller',
     @Query('page') page?: number,
     @Query('pagesize') pagesize?: number,
   ): Promise<PaginationRto> {
     return this.userService.getUsers(
       {
         fullname,
-        phonenumber,
-        phonenumberVerified,
+        email,
+        role,
       },
       { page, pagesize },
     );

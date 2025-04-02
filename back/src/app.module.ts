@@ -17,7 +17,6 @@ import { TypeOrmExceptionFilter } from './filter/typeorm-exception.filter';
 import { JwtModule } from '@nestjs/jwt';
 import { TokenService } from './services/token.service';
 import { CacheModule } from '@nestjs/cache-manager';
-import { OtpService } from './services/otp.service';
 import { UserSession } from './entities/user-session.entities';
 import { UserSessionScheduler } from './scheduler/user-session.scheduler';
 import { RedisService } from './services/redis.service';
@@ -55,12 +54,11 @@ export const redisClientFactory: FactoryProvider<Redis> = {
   ],
   providers: [
     TokenService,
-    OtpService,
     UserSessionScheduler,
     RedisService,
     UserCrudService,
     redisClientFactory,
   ],
-  exports: [TokenService, OtpService, RedisService, UserCrudService],
+  exports: [TokenService, RedisService, UserCrudService],
 })
 export class AppModule {}

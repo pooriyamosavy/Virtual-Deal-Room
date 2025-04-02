@@ -39,18 +39,6 @@ export class AuthController {
     return this.authService.logout(userSession);
   }
 
-  @ApiResponse({ status: 201, description: sendOtpSuccessMessage })
-  @Post('send-otp')
-  sendOtp(@AuthUser() user: User) {
-    return this.authService.sendOtp(user);
-  }
-
-  @ApiResponse({ status: 201, description: verifyOtpSuccessMessage })
-  @Post('verify-otp')
-  verifyOtp(@AuthUser() user: User, @Body() body: VerifyOtpDto) {
-    return this.authService.verifyOtp(user, body.otp);
-  }
-
   @ApiResponse({})
   @Post('change-password')
   changePassword(@AuthUser() user: User, @Body() body: ChangePasswordDto) {

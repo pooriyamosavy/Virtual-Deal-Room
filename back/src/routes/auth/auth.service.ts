@@ -6,14 +6,9 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { TokenService } from 'src/services/token.service';
 import { LoginDto } from './dto/login.dto';
-import { OtpService } from 'src/services/otp.service';
 import { SignupRto } from './rto/signup.rto';
 import { LoginRto } from './rto/login.rto';
-import {
-  logoutSuccessMessage,
-  sendOtpSuccessMessage,
-  verifyOtpSuccessMessage,
-} from './static/response.text';
+import { logoutSuccessMessage } from './static/response.text';
 import { UserSession } from 'src/entities/user-session.entities';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { UserCrudService } from 'src/services/crud/user-crud.service';
@@ -24,7 +19,6 @@ export class AuthService {
     @InjectRepository(UserSession)
     private userSessionRepository: Repository<UserSession>,
     private tokenService: TokenService,
-    private otpService: OtpService,
     private userCrudService: UserCrudService,
   ) {}
 
@@ -33,9 +27,9 @@ export class AuthService {
 
     const user = new User({
       fullname: '',
-      phonenumber: body.phonenumber,
-      phonenumberVerified: false,
       password: hashedPassword,
+      email: body.email,
+      role: body.role,
     });
 
     const newUser = await this.userCrudService.createUser(user);
@@ -56,7 +50,7 @@ export class AuthService {
 
   async login(body: LoginDto): Promise<LoginRto> {
     const user = await this.userCrudService.getUser({
-      phonenumber: body.phonenumber,
+      email: body.email,
     });
 
     if (!user) {
@@ -80,23 +74,6 @@ export class AuthService {
     return {
       token,
     };
-  }
-
-  async sendOtp(user: User) {
-    await this.otpService.sendOtp(user);
-
-    return sendOtpSuccessMessage;
-  }
-
-  async verifyOtp(user: User, otp: string) {
-    await this.otpService.verifyOtp(user, otp);
-
-    await this.userCrudService.updateUser({
-      ...user,
-      phonenumberVerified: true,
-    });
-
-    return verifyOtpSuccessMessage;
   }
 
   async logout(userSession: UserSession) {

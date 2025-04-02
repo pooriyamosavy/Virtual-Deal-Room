@@ -35,13 +35,17 @@ export class RedisService {
 
   async del(prefix: string, key: RedisKey): Promise<number> {
     console.log('removing key', { key: this.getKey(prefix, key) });
-    return await this.redisClient.del(this.getKey(prefix, key));
+    const delArg = this.getKey(prefix, key) || [];
+    return await this.redisClient.del(...delArg);
   }
 
   async flushPrefix(prefix: string) {
     console.log('removing all keys with prefix', { prefix });
     const allkeys = await this.redisClient.keys(prefix + '*');
-    return await this.redisClient.del(allkeys);
+    if (allkeys.length) {
+      return await this.redisClient.del(...allkeys);
+    }
+    return;
   }
 
   async getCallback<T>(

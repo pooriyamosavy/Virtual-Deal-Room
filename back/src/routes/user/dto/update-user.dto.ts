@@ -7,12 +7,11 @@ export class UpdateUserDTO
       User,
       | 'id'
       | 'password'
-      | 'phonenumberVerified'
-      | 'phonenumber'
       | 'sessions'
       | 'created_at'
       | 'updated_at'
-      | 'is_admin'
+      | 'role'
+      | 'email'
     >
 {
   @IsString()

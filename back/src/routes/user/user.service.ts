@@ -27,10 +27,8 @@ export class UserService {
   ): Promise<PaginationRto> {
     const where = {
       fullname: user.fullname ? ILike(`%${user.fullname}%`) : undefined,
-      phonenumber: user.phonenumber
-        ? ILike(`%${user.phonenumber}%`)
-        : undefined,
-      phonenumberVerified: user.phonenumberVerified,
+      email: user.email ? ILike(`%${user.email}%`) : undefined,
+      phonenumberVerified: user.email,
     };
 
     const result = await this.userCrudService.getUsers(where, pagination);

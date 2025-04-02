@@ -56,10 +56,6 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('User not found');
     }
 
-    if (Role === ERole.admin && !user.is_admin) {
-      throw new UnauthorizedException('Admin role required');
-    }
-
     console.log('user stored in request');
     request.user = user;
     request.userSession = userSession;
